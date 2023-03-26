@@ -59,9 +59,11 @@ Click on the hint or use your keyboard **Right** key, **Tab** key (if `allowTabF
 
 #### allowEnterFill (optional): `Boolean`
 
+#### hintColor (optional): `string`
+
 #### onFill (optional): `(value: string | object)=> void`
 
-#### onHint (optional): `(value: string | object | undefined)=> void`
+#### onHint (optional): `(value: Array<string> | Array<object> | undefined)=> void`
 
 #### valueModifier (optional): `(value: string)=> string`
 
@@ -85,7 +87,7 @@ const options = ["orange", "banana", "apple"];
 
 
 ## onHint
-Returns the current hint.
+Returns the hints.
 
 
 ## valueModifier
