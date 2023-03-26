@@ -19,8 +19,9 @@ export interface IHintProps {
     children: ReactElement;
     allowTabFill?: boolean;
     allowEnterFill?: boolean;
+    hintColor?: string;
     onFill?(value: string | IHintOption): void;
-    onHint?(value: string | IHintOption | undefined): void;
+    onHint?(value: string[] | IHintOption[] | undefined): void;
     valueModifier?(value: string): string;
 }
 
@@ -36,6 +37,7 @@ export const Hint: React.FC<IHintProps> = props => {
         disableHint,
         allowTabFill,
         allowEnterFill,
+        hintColor,
         onFill,
         onHint,
         valueModifier
@@ -70,30 +72,32 @@ export const Hint: React.FC<IHintProps> = props => {
         inputStyle && styleHint(hintWrapperRef, hintRef, inputStyle);
     });
 
-    const getMatch = (text: string) => {
+    const getMatches = (text: string) => {
         if (!text || text === '') {
-            return;
+            return [];
         }
 
         if (typeof (options[0]) === 'string') {
-            const match = (options as Array<string>)
+            const matches = (options as Array<string>)
                 .filter(x => x.toLowerCase() !== text.toLowerCase() && x.toLowerCase().startsWith(text.toLowerCase()))
-                .sort()[0];
+                .sort();
 
-            return match;
+            return matches;
         } else {
-            const match = (options as Array<IHintOption>)
+            const matches = (options as Array<IHintOption>)
                 .filter(x => x.label.toLowerCase() !== text.toLowerCase() && x.label.toLowerCase().startsWith(text.toLowerCase()))
-                .sort((a, b) => sortAsc(a.label, b.label))[0];
+                .sort((a, b) => sortAsc(a.label, b.label));
 
-            return match;
+            return matches;
         }
     };
 
     const setHintTextAndId = (text: string) => {
         setText(text);
 
-        const match = getMatch(text);
+        const matches = getMatches(text);
+        const match = matches && matches.length > 0 ? matches[0] : undefined;
+        
         let hint: string;
 
         if (!match) {
@@ -107,7 +111,7 @@ export const Hint: React.FC<IHintProps> = props => {
 
         setHint(hint);
         setMatch(match);
-        onHint && onHint(match)
+        onHint && onHint(matches)
     }
 
     const handleOnFill = () => {
@@ -287,7 +291,7 @@ export const Hint: React.FC<IHintProps> = props => {
                                         boxShadow: 'none',
                                         padding: 0,
                                         margin: 0,
-                                        color: 'rgba(0, 0, 0, 0.30)',
+                                        color: hintColor ? hintColor : 'rgba(0, 0, 0, 0.30)',
                                         caretColor: 'transparent'
                                     }}
                                     defaultValue={hint}
