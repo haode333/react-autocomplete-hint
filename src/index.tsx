@@ -17,8 +17,13 @@ export interface IHintProps {
     options: Array<string> | Array<IHintOption>;
     disableHint?: boolean;
     children: ReactElement;
+    allowLeftClickFill?: boolean;
+    allowArrowFill?: boolean;
     allowTabFill?: boolean;
     allowEnterFill?: boolean;
+    detectFocus?: boolean;
+    detectBlur?: boolean;
+    continuousHint?: boolean;
     hintColor?: string;
     onFill?(value: string | IHintOption): void;
     onHint?(value: string[] | IHintOption[] | undefined): void;
@@ -35,8 +40,13 @@ export const Hint: React.FC<IHintProps> = props => {
     const {
         options,
         disableHint,
+        allowLeftClickFill,
+        allowArrowFill,
         allowTabFill,
         allowEnterFill,
+        detectFocus,
+        detectBlur,
+        continuousHint,
         hintColor,
         onFill,
         onHint,
@@ -79,16 +89,28 @@ export const Hint: React.FC<IHintProps> = props => {
 
         if (typeof (options[0]) === 'string') {
             const matches = (options as Array<string>)
-                .filter(x => x.toLowerCase() !== text.toLowerCase() && x.toLowerCase().startsWith(text.toLowerCase()))
+                .filter(x => x.toLowerCase().startsWith(text.toLowerCase()))
                 .sort();
 
-            return matches;
+            onHint && onHint(matches);
+
+            const matchesWithoutOriginal = matches
+                .filter(x => x.toLowerCase() !== text.toLowerCase())
+                .sort();
+
+            return matchesWithoutOriginal;
         } else {
             const matches = (options as Array<IHintOption>)
-                .filter(x => x.label.toLowerCase() !== text.toLowerCase() && x.label.toLowerCase().startsWith(text.toLowerCase()))
+                .filter(x => x.label.toLowerCase().startsWith(text.toLowerCase()))
                 .sort((a, b) => sortAsc(a.label, b.label));
 
-            return matches;
+            onHint && onHint(matches);
+
+            const matchesWithoutOriginal = matches
+                .filter(x => x.label.toLowerCase() !== text.toLowerCase())
+                .sort((a, b) => sortAsc(a.label, b.label));
+
+            return matchesWithoutOriginal;
         }
     };
 
@@ -102,8 +124,7 @@ export const Hint: React.FC<IHintProps> = props => {
 
         if (!match) {
             hint = '';
-        }
-        else if (typeof match === 'string') {
+        } else if (typeof match === 'string') {
             hint = match.slice(text.length);
         } else {
             hint = match.label.slice(text.length);
@@ -111,7 +132,6 @@ export const Hint: React.FC<IHintProps> = props => {
 
         setHint(hint);
         setMatch(match);
-        onHint && onHint(matches)
     }
 
     const handleOnFill = () => {
@@ -123,7 +143,12 @@ export const Hint: React.FC<IHintProps> = props => {
 
         changeEvent.target.value = newUnModifiedText;
         childProps.onChange && childProps.onChange(changeEvent);
-        setHintTextAndId('');
+
+        if (!continuousHint) {
+            setHintTextAndId('');
+        } else {
+            setHintTextAndId(newUnModifiedText);
+        }
 
         onFill && onFill(match!);
 
@@ -166,13 +191,15 @@ export const Hint: React.FC<IHintProps> = props => {
     };
 
     const onFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-        setHintTextAndId(e.target.value);
-        childProps.onFocus && childProps.onFocus(e);
+        if (detectFocus) {
+            setHintTextAndId(e.target.value);
+            childProps.onFocus && childProps.onFocus(e);
+        }
     };
 
     const onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-        //Only blur it if the new focus isn't the the hint input
-        if (hintRef?.current !== e.relatedTarget) {
+        // Only blur it if the new focus isn't the the hint input
+        if (detectBlur && hintRef?.current !== e.relatedTarget) {
             setHintTextAndId('');
             childProps.onBlur && childProps.onBlur(e);
         }
@@ -193,7 +220,8 @@ export const Hint: React.FC<IHintProps> = props => {
             return caretIsAtTextEnd;
         })();
 
-        if (caretIsAtTextEnd && e.key === ARROWRIGHT) {
+        if (caretIsAtTextEnd && allowArrowFill && e.key === ARROWRIGHT) {
+            e.preventDefault();
             handleOnFill();
         } else if (caretIsAtTextEnd && allowTabFill && e.key === TAB && hint !== '') {
             e.preventDefault();
@@ -209,14 +237,9 @@ export const Hint: React.FC<IHintProps> = props => {
     const onHintClick = (e: React.MouseEvent<HTMLInputElement>) => {
         const hintCaretPosition = e.currentTarget.selectionEnd || 0;
 
-        // If user clicks the position before the first character of the hint, 
-        // move focus to the end of the mainInput text
-        if (hintCaretPosition === 0) {
-            mainInputRef.current?.focus();
-            return;
-        }
+        mainInputRef.current?.focus();
 
-        if (!!hint && hint !== '') {
+        if (allowLeftClickFill && !!hint && hint !== '') {
             handleOnFill();
             setTimeout(() => {
                 mainInputRef.current?.focus();

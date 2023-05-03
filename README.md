@@ -24,6 +24,10 @@ yarn add react-autocomplete-hint
 ```
 
 
+## Changes
+
+Since 2.1.0 there are breaking changes compared to original repo. Please check the new options/props before update.
+
 ## Usage
 ```jsx
 import { Hint } from 'react-autocomplete-hint';
@@ -46,36 +50,53 @@ const options = [
 
 ```
 
-Click on the hint or use your keyboard **Right** key, **Tab** key (if `allowTabFill` is set to true), or **Enter** key (if `allowEnterFill` is set to true) to fill your input with the suggested hint.
+Click on the hint (**left click**) or use your keyboard **Right** key (if `allowArrowFill` is set to true), **Tab** key (if `allowTabFill` is set to true), or **Enter** key (if `allowEnterFill` is set to true) to fill your input with the suggested hint.
 
 
-## Props
+## API
 
-#### options (required): `Array<string> | Array<object>`
+### `props`
 
-#### disableHint (optional): `Boolean`
+*   `options (required): Array<string> | Array<object>`
 
-#### allowTabFill (optional): `Boolean`
+*   `disableHint (optional): Boolean`
 
-#### allowEnterFill (optional): `Boolean`
+*   `allowLeftClickFill (optional): Boolean`
 
-#### hintColor (optional): `string`
+*   `allowArrowFill (optional): Boolean`
 
-#### onFill (optional): `(value: string | object)=> void`
+*   `allowTabFill (optional): Boolean`
 
-#### onHint (optional): `(value: Array<string> | Array<object> | undefined)=> void`
+*   `allowEnterFill (optional): Boolean`
 
-#### valueModifier (optional): `(value: string)=> string`
+*   `detectFocus (optional): Boolean`
+    Whether to fill hint on focus
+
+*   `detectBlur (optional): Boolean`
+    Whether to clear hints on blur
+
+*   `continuousHint (optional): Boolean`
+    Do not clear hint candidates
+    
+*   `hintColor (optional): string`
+
+### `prop functions`
+
+*   `onFill (optional): (value: string | object)=> void`
+
+*   `onHint (optional): (value: Array<string> | Array<object> | undefined)=> void`
+
+*   `valueModifier (optional): (value: string)=> string`
 
 
-## object option
+### object option
 If you're using objects for your options. object schema is as follows:
 
-#### id: `string | number`
-#### label: `string`
+*   id: `string | number`
+*   label: `string`
 
 
-## onFill
+### onFill
 Returns the option selected immediately the input is filled with the suggested hint. 
 
 Note that it won't return the selected option with the casing the user typed, rather it returns the option with the casing specified in your options prop. For example, if the options are specified like this:...
@@ -86,11 +107,12 @@ const options = ["orange", "banana", "apple"];
 ...and the input gets filled with *"ORange"*, onFill will still return *"orange"*.
 
 
-## onHint
+### onHint
 Returns the hints.
+Note that onHint will now return hint that's same with input.
 
 
-## valueModifier
+### valueModifier
 This prop accepts a function that modifies your input value before it is saved in state.
 
 It is typically useful when you are not setting `e.target.value` directly in state and need to modify the target value to 
