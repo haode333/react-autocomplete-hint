@@ -52,6 +52,9 @@ jobs:
         
       - name: Remove index.tsx
         run: rm ./docs/index.tsx
+        
+      - name: Remove index.scss
+        run: rm ./docs/index.scss
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
