@@ -11,7 +11,7 @@ A React component for Autocomplete Hint.
 
 ## Demo
 
-Demo can be found here: [https://ejmudi.github.io/react-autocomplete-hint/](https://ejmudi.github.io/react-autocomplete-hint/)
+Demo can be found here: [https://haode333.github.io/react-autocomplete-hint/](https://haode333.github.io/react-autocomplete-hint/)
 
 
 ## Installation
