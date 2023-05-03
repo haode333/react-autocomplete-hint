@@ -19,7 +19,6 @@
 .env.production.local
 /dist
 /docs/**
-!docs/app.bundle.js
 !docs/index.html
 !docs/index.scss
 !docs/index.tsx
@@ -27,3 +26,5 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+*.lock
