@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Hint } from '../src';
 import './index.scss';
 
 const Demo: React.FC = () => {
     const [text, setText] = useState('');
-    const options = ['Papaya', 'Persimmon', 'Pear', 'Peach', 'Apples', 'Apricots', 'Avocados'];
+    const options = ['Papaya', 'Persimmon', 'Pea', 'Pear', 'Peach', 'Apples', 'Apricots', 'Avocados'];
 
     return (
         <div className='demo'>
@@ -13,10 +13,10 @@ const Demo: React.FC = () => {
                 Try typing any of the words in the list below:
             </p>
             <code>
-                ["Papaya", "Persimmon", "Pear", "Peach", "Apples", "Apricots", "Avocados"]
+                ["Papaya", "Persimmon", "Pea", "Pear", "Peach", "Apples", "Apricots", "Avocados"]
             </code>
             <div className='input-wrapper'>
-                <Hint options={options} allowTabFill allowEnterFill hintColor='red' onHint={(vals) => console.log(JSON.stringify(vals))}>
+                <Hint options={options} allowTabFill continuousHint hintColor='red' onHint={(vals) => console.log(`onHint: ${JSON.stringify(vals)}`)} onFill={(val) => console.log(`onFill: ${val}`)}>
                     <input
                         className='input-with-hint'
                         value={text}
@@ -24,13 +24,11 @@ const Demo: React.FC = () => {
                 </Hint>
             </div>
             <p>
-                Github Repo: <a href="https://github.com/ejmudi/react-autocomplete-hint">https://github.com/ejmudi/react-autocomplete-hint</a>
+                Github Repo: <a href="https://github.com/haode333/react-autocomplete-hint">https://github.com/haode333/react-autocomplete-hint</a>
             </p>
         </div>
     );
 }
 
-ReactDOM.render(
-    <Demo />,
-    document.getElementById("root")
-);
+const root = createRoot(document.getElementById("root")!);
+root.render(<Demo />);
