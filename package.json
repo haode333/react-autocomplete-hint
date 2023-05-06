@@ -1,6 +1,6 @@
 {
   "name": "@fisherwise/react-autocomplete-hint",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "A React component for Autocomplete hint",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",

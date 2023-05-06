@@ -6,13 +6,17 @@ import React, {
     ReactElement,
     StrictMode
 } from 'react';
-import { IHintOption } from './IHintOption';
 import {
     mergeRefs,
     interpolateStyle,
     sortAsc,
     getFirstDuplicateOption
 } from './utils';
+
+export interface IHintOption {
+    id: string | number;
+    label: string;
+}
 
 export interface IHintProps {
     options: Array<string> | Array<IHintOption>;

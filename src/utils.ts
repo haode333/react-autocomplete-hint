@@ -1,5 +1,5 @@
 import { MutableRefObject, RefCallback } from "react";
-import { IHintOption } from "./IHintOption";
+import { IHintOption } from ".";
 
 type MutableRef<T> = RefCallback<T> | MutableRefObject<T> | null;
 
