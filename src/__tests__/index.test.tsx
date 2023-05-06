@@ -6,7 +6,7 @@ import React, { useRef } from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Hint } from '..';
-import { IHintOption } from '../IHintOption';
+import { IHintOption } from '..';
 import { renderHook } from '@testing-library/react-hooks';
 import '@testing-library/jest-dom/extend-expect';
 
