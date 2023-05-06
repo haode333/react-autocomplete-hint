@@ -3,7 +3,8 @@ import React, {
     cloneElement,
     useEffect,
     useRef,
-    ReactElement
+    ReactElement,
+    StrictMode
 } from 'react';
 import { IHintOption } from './IHintOption';
 import {
@@ -119,7 +120,7 @@ export const Hint: React.FC<IHintProps> = props => {
 
         const matches = getMatches(text);
         const match = matches && matches.length > 0 ? matches[0] : undefined;
-        
+
         let hint: string;
 
         if (!match) {
@@ -138,7 +139,7 @@ export const Hint: React.FC<IHintProps> = props => {
         if (hint === '' || !changeEvent) {
             return;
         }
-        
+
         const newUnModifiedText = unModifiedInputText + hint;
 
         changeEvent.target.value = newUnModifiedText;
@@ -265,65 +266,67 @@ export const Hint: React.FC<IHintProps> = props => {
     );
 
     return (
-        <div
-            className="rah-input-wrapper"
-            style={{
-                position: 'relative'
-            }}>
-            {
-                disableHint
-                    ? child
-                    : (
-                        <>
-                            {mainInput}
-                            <span
-                                className="rah-hint-wrapper"
-                                ref={hintWrapperRef}
-                                style={{
-                                    display: 'flex',
-                                    pointerEvents: 'none',
-                                    backgroundColor: 'transparent',
-                                    borderColor: 'transparent',
-                                    boxShadow: 'none',
-                                    color: 'rgba(0, 0, 0, 0.35)',
-                                    position: 'absolute',
-                                    top: 0,
-                                    left: 0,
-                                }}
-                            >
+        <StrictMode>
+            <div
+                className="rah-input-wrapper"
+                style={{
+                    position: 'relative'
+                }}>
+                {
+                    disableHint
+                        ? child
+                        : (
+                            <>
+                                {mainInput}
                                 <span
-                                    className='rah-text-filler'
+                                    className="rah-hint-wrapper"
+                                    ref={hintWrapperRef}
                                     style={{
-                                        visibility: 'hidden',
+                                        display: 'flex',
                                         pointerEvents: 'none',
-                                        whiteSpace: 'pre'
+                                        backgroundColor: 'transparent',
+                                        borderColor: 'transparent',
+                                        boxShadow: 'none',
+                                        color: 'rgba(0, 0, 0, 0.35)',
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
                                     }}
                                 >
-                                    {text}
+                                    <span
+                                        className='rah-text-filler'
+                                        style={{
+                                            visibility: 'hidden',
+                                            pointerEvents: 'none',
+                                            whiteSpace: 'pre'
+                                        }}
+                                    >
+                                        {text}
+                                    </span>
+                                    <input
+                                        className="rah-hint"
+                                        ref={hintRef}
+                                        onClick={onHintClick}
+                                        style={{
+                                            pointerEvents: !hint || hint === '' ? 'none' : 'visible',
+                                            background: 'transparent',
+                                            width: '100%',
+                                            outline: 'none',
+                                            border: 'none',
+                                            boxShadow: 'none',
+                                            padding: 0,
+                                            margin: 0,
+                                            color: hintColor ? hintColor : 'rgba(0, 0, 0, 0.30)',
+                                            caretColor: 'transparent'
+                                        }}
+                                        defaultValue={hint}
+                                        tabIndex={-1}
+                                    />
                                 </span>
-                                <input
-                                    className="rah-hint"
-                                    ref={hintRef}
-                                    onClick={onHintClick}
-                                    style={{
-                                        pointerEvents: !hint || hint === '' ? 'none' : 'visible',
-                                        background: 'transparent',
-                                        width: '100%',
-                                        outline: 'none',
-                                        border: 'none',
-                                        boxShadow: 'none',
-                                        padding: 0,
-                                        margin: 0,
-                                        color: hintColor ? hintColor : 'rgba(0, 0, 0, 0.30)',
-                                        caretColor: 'transparent'
-                                    }}
-                                    defaultValue={hint}
-                                    tabIndex={-1}
-                                />
-                            </span>
-                        </>
-                    )
-            }
-        </div>
+                            </>
+                        )
+                }
+            </div>
+        </StrictMode>
     );
 }
