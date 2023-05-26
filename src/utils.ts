@@ -3,14 +3,14 @@ import { IHintOption } from ".";
 
 type MutableRef<T> = RefCallback<T> | MutableRefObject<T> | null;
 
-export function mergeRefs(...refs: Array<MutableRef<HTMLElement | null>>) {
+export function mergeRefs(...refs: Array<MutableRef<HTMLElement | null>>): RefCallback<HTMLElement> {
     const filteredRefs = refs.filter(Boolean);
 
     return (inst: HTMLElement) => {
         for (let ref of filteredRefs) {
             if (typeof ref === 'function') {
                 ref(inst);
-            } else if (ref) {
+            } else if (ref && 'current' in ref) {
                 ref.current = inst;
             }
         }
@@ -30,8 +30,7 @@ export function interpolateStyle(
     }
 
     return ['Top', 'Right', 'Bottom', 'Left']
-        // @ts-ignore: (attr + dir + subattr) property cannot be determined at compile time
-        .map((dir) => styles[attr + dir + subattr])
+        .map((dir) => (styles as any)[attr + dir + subattr])
         .join(' ');
 }
 
@@ -45,15 +44,15 @@ export function sortAsc<T>(a: T, b: T) {
     return 0;
 }
 
-export function getFirstDuplicateOption(array: Array<IHintOption>) {
-    let tracker: { [key: string]: boolean } = {};
+export function getFirstDuplicateOption(array: Array<IHintOption>): string | null {
+    const tracker = new Set<string>();
 
     for (let i = 0; i < array.length; i++) {
-        if (tracker[array[i].label]) {
+        if (tracker.has(array[i].label)) {
             return array[i].label;
         }
 
-        tracker[array[i].label] = true;
+        tracker.add(array[i].label);
     }
 
     return null;
