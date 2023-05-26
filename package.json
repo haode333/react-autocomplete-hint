@@ -1,6 +1,6 @@
 {
   "name": "@fisherwise/react-autocomplete-hint",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "description": "A React component for Autocomplete hint",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -14,9 +14,8 @@
     "build": "webpack",
     "start:dev": "webpack-dev-server --open",
     "start": "npm run build && npm run start:dev",
-    "jest": "./node_modules/jest/bin/jest.js",
-    "test": "jest --watch",
-    "coverage": "jest --coverage",
+    "test": "npx jest --watch",
+    "coverage": "npx jest --coverage",
     "prepublishOnly": "tsc"
   },
   "repository": {
@@ -53,9 +52,6 @@
     "webpack": "^5.84.1",
     "webpack-cli": "^5.1.1",
     "webpack-dev-server": "^4.15.0"
-  },
-  "peerDependencies": {
-    "react": ">=16.0.0"
   },
   "keywords": [
     "autocomplete",

@@ -4,7 +4,8 @@ import React, {
     useEffect,
     useRef,
     ReactElement,
-    StrictMode
+    StrictMode,
+    useCallback
 } from 'react';
 import {
     mergeRefs,
@@ -89,7 +90,7 @@ export const Hint: React.FC<IHintProps> = props => {
         inputStyle && styleHint(hintWrapperRef, hintRef, inputStyle);
     });
 
-    const getMatches = (text: string) => {
+    const getMatches = useCallback((text: string) => {
         if (!text || text === '') {
             return [];
         }
@@ -119,7 +120,7 @@ export const Hint: React.FC<IHintProps> = props => {
 
             return matchesWithoutOriginal;
         }
-    };
+    }, [options, onHint]);
 
     const setHintTextAndId = (text: string) => {
         setText(text);
@@ -218,34 +219,34 @@ export const Hint: React.FC<IHintProps> = props => {
         }
     };
 
+    const caretIsAtTextEnd = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+        // For selectable input types ("text", "search"), only select the hint if
+        // it's at the end of the input value. For non-selectable types ("email",
+        // "number"), always select the hint.
+
+        const isNonSelectableType = e.currentTarget.selectionEnd === null;
+        const caretIsAtTextEnd = isNonSelectableType || e.currentTarget.selectionEnd === e.currentTarget.value.length;
+
+        return caretIsAtTextEnd;
+    }, []);
+
     const ARROWRIGHT = 'ArrowRight';
     const TAB = 'Tab';
     const ENTER = 'Enter';
-    const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        const caretIsAtTextEnd = (() => {
-            // For selectable input types ("text", "search"), only select the hint if
-            // it's at the end of the input value. For non-selectable types ("email",
-            // "number"), always select the hint.
-
-            const isNonSelectableType = e.currentTarget.selectionEnd === null;
-            const caretIsAtTextEnd = isNonSelectableType || e.currentTarget.selectionEnd === e.currentTarget.value.length;
-
-            return caretIsAtTextEnd;
-        })();
-
-        if (caretIsAtTextEnd && allowArrowFill && e.key === ARROWRIGHT) {
+    const onKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (caretIsAtTextEnd(e) && allowArrowFill && e.key === ARROWRIGHT) {
             e.preventDefault();
             handleOnFill();
-        } else if (caretIsAtTextEnd && allowTabFill && e.key === TAB && hint !== '') {
+        } else if (caretIsAtTextEnd(e) && allowTabFill && e.key === TAB && hint !== '') {
             e.preventDefault();
             handleOnFill();
-        } else if (caretIsAtTextEnd && allowEnterFill && e.key === ENTER && hint !== '') {
+        } else if (caretIsAtTextEnd(e) && allowEnterFill && e.key === ENTER && hint !== '') {
             e.preventDefault();
             handleOnFill();
         }
 
         childProps.onKeyDown && childProps.onKeyDown(e);
-    };
+    }, [caretIsAtTextEnd, allowArrowFill, allowTabFill, allowEnterFill, hint]);
 
     const onHintClick = (e: React.MouseEvent<HTMLInputElement>) => {
         const hintCaretPosition = e.currentTarget.selectionEnd || 0;
