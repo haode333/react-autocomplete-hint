@@ -16,7 +16,7 @@ const Demo: React.FC = () => {
                 ["Papaya", "Persimmon", "Pea", "Pear", "Peach", "Apples", "Apricots", "Avocados"]
             </code>
             <div className='input-wrapper'>
-                <Hint options={options} allowTabFill continuousHint hintColor='red' onHint={(vals) => console.log(`onHint: ${JSON.stringify(vals)}`)} onFill={(val) => console.log(`onFill: ${val}`)}>
+                <Hint options={options} allowTabFill continuousHint hintColor='red' onHint={(vals) => console.log(`onHint: ${JSON.stringify(vals)}`)} onFill={(val) => console.log(`onFill: ${val}`)} onEmpty={() => console.log('onEmpty called')}>
                     <input
                         className='input-with-hint'
                         value={text}

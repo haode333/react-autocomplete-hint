@@ -86,6 +86,8 @@ Click on the hint (**left click**) or use your keyboard **Right** key (if `allow
 
 *   `onHint (optional): (value: Array<string> | Array<object> | undefined)=> void`
 
+*   `onEmpty (optional): ()=> void`
+
 *   `valueModifier (optional): (value: string)=> string`
 
 
@@ -111,6 +113,8 @@ const options = ["orange", "banana", "apple"];
 Returns the hints.
 Note that onHint will now return hint that's same with input.
 
+### onEmpty
+Called whem input is empty.
 
 ### valueModifier
 This prop accepts a function that modifies your input value before it is saved in state.

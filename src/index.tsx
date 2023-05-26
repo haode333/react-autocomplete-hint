@@ -32,6 +32,7 @@ export interface IHintProps {
     hintColor?: string;
     onFill?(value: string | IHintOption): void;
     onHint?(value: string[] | IHintOption[] | undefined): void;
+    onEmpty?(): void;
     valueModifier?(value: string): string;
 }
 
@@ -55,6 +56,7 @@ export const Hint: React.FC<IHintProps> = props => {
         hintColor,
         onFill,
         onHint,
+        onEmpty,
         valueModifier
     } = props;
 
@@ -160,6 +162,10 @@ export const Hint: React.FC<IHintProps> = props => {
         setUnmodifiedInputText(newUnModifiedText);
     };
 
+    const handleOnEmpty = (text: string) => {
+        if (onEmpty && text === '') onEmpty();
+    };
+
     const styleHint = (
         hintWrapperRef: React.RefObject<HTMLSpanElement>,
         hintRef: React.RefObject<HTMLInputElement>,
@@ -191,6 +197,8 @@ export const Hint: React.FC<IHintProps> = props => {
         setUnmodifiedInputText(e.target.value);
         const modifiedValue = valueModifier ? valueModifier(e.target.value) : e.target.value;
         setHintTextAndId(modifiedValue);
+
+        handleOnEmpty(e.target.value);
 
         childProps.onChange && childProps.onChange(e);
     };
